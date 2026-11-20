@@ -1,0 +1,6 @@
+{
+  "name": "WinISO Hub",
+  "description": "Download genuine Windows ISO files directly from official Microsoft sources with hash verification, bootable USB guides, and cloud profile sign-in options.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

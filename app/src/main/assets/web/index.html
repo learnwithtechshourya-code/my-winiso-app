@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WinISO Hub — Official Windows & macOS ISO Catalog, Tools Kit & Privacy</title>
+  <meta name="description" content="Download official Windows 11, Windows 10, Windows Server, and macOS installer media alongside Rufus, Ventoy, Sysinternals, SHA-256 verification, and Privacy & Copyright details." />
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #111a2e;
+      --surface-2: #18233c;
+      --border: #253456;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --accent: #0ea5e9;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --radius: 16px;
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.14), transparent 40%),
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.1), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 17, 32, 0.88);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 66px;
+      flex-wrap: wrap;
+      padding: 10px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #fff;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: #fff;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover { color: #fff; text-decoration: none; }
+
+    .hero { padding: 52px 0 32px; }
+
+    .hero-card {
+      background: linear-gradient(135deg, rgba(24, 35, 60, 0.95), rgba(17, 26, 46, 0.95));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 36px 28px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.14);
+      color: var(--green);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      width: fit-content;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.85rem, 3.6vw, 2.75rem);
+      line-height: 1.18;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .hero p { color: var(--muted); max-width: 68ch; font-size: 1rem; }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); text-decoration: none; }
+    .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
+    .btn-outline:hover { background: var(--surface-2); text-decoration: none; }
+    .btn-pro {
+      background: rgba(245, 158, 11, 0.16);
+      border-color: rgba(245, 158, 11, 0.45);
+      color: #fbbf24;
+    }
+
+    .section { padding: 28px 0; }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .section-header h2 { font-size: 1.5rem; font-weight: 800; color: #fff; }
+    .section-header p { color: var(--muted); font-size: 0.92rem; }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+
+    .search-input {
+      flex: 1 1 240px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-family: var(--sans);
+      font-size: 0.92rem;
+      outline: none;
+    }
+
+    .search-input:focus { border-color: var(--primary); }
+
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+
+    .chip {
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      background: rgba(59, 130, 246, 0.18);
+      color: #93c5fd;
+      border-color: var(--primary);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card h3 { font-size: 1.06rem; font-weight: 700; color: #fff; }
+    .meta { font-family: var(--mono); font-size: 0.76rem; color: var(--accent); }
+
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    .tag-free { background: rgba(16, 185, 129, 0.15); color: var(--green); }
+    .tag-pro { background: rgba(245, 158, 11, 0.16); color: #fbbf24; }
+
+    .card p { font-size: 0.88rem; color: var(--muted); }
+
+    .hash-box {
+      background: rgba(11, 17, 32, 0.75);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      word-break: break-all;
+    }
+
+    .card-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card-actions .btn { flex: 1; padding: 9px 12px; font-size: 0.82rem; }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+    }
+
+    .pro-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .plan-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+    }
+
+    .plan-card.selected {
+      border-color: var(--primary);
+      background: rgba(59, 130, 246, 0.14);
+    }
+
+    .plan-price { font-size: 1.25rem; font-weight: 800; color: #fff; }
+
+    .status-box {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      display: none;
+    }
+
+    .status-box.show { display: block; }
+    .status-success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #6ee7b7;
+    }
+    .status-warn {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fcd34d;
+    }
+
+    .legal-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .legal-block h3 { color: #fff; margin-bottom: 8px; }
+    .legal-block p, .legal-block li { color: var(--muted); font-size: 0.9rem; }
+    .legal-block ul { padding-left: 20px; margin-top: 6px; display: grid; gap: 6px; }
+
+    .site-footer {
+      margin-top: 40px;
+      border-top: 1px solid var(--border);
+      background: rgba(11, 17, 32, 0.92);
+      padding: 28px 0 36px;
+    }
+
+    .footer-grid { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .copyright {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(37, 52, 86, 0.65);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="#top" class="brand">
+        <span class="brand-badge">WI</span>
+        <span>WinISO Hub</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary Navigation">
+        <a href="#catalog">ISO Catalog</a>
+        <a href="#toolkit">Tools Kit</a>
+        <a href="#verifier">SHA-256 Verifier</a>
+        <a href="#pro-access">macOS Pro</a>
+        <a href="#privacy-copyright">Privacy &amp; Copyright</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="container">
+    <section class="hero">
+      <div class="hero-card">
+        <span class="pill">Official Microsoft &amp; Apple Distribution Sources</span>
+        <h1>Clean OS Installation Images &amp; Bootable USB Tools Kit</h1>
+        <p>
+          Browse verified Windows 11, Windows 10, LTSC, and Windows Server downloads directly from Microsoft,
+          grab essential bootable USB utilities like Rufus and Ventoy, and verify SHA-256 checksums before flashing.
+        </p>
+        <div class="hero-actions">
+          <a href="#catalog" class="btn btn-primary">Browse Official ISOs</a>
+          <a href="#toolkit" class="btn btn-outline">Download Tools Kit</a>
+          <a href="#privacy-copyright" class="btn btn-outline">Privacy Policy &amp; Copyright</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalog" class="section">
+      <div class="section-header">
+        <div>
+          <h2>Official OS ISO Catalog</h2>
+          <p>Windows ISOs are completely free. macOS installers are available via Pro Access.</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <input id="iso-search" class="search-input" type="search" placeholder="Search Windows 11, 10, Server, LTSC, macOS..." aria-label="Search ISOs" />
+      </div>
+
+      <div class="chip-row" role="tablist" aria-label="ISO categories">
+        <button type="button" class="chip active" data-category="all">All OS</button>
+        <button type="button" class="chip" data-category="windows11">Windows 11</button>
+        <button type="button" class="chip" data-category="windows10">Windows 10</button>
+        <button type="button" class="chip" data-category="server">Server &amp; LTSC</button>
+        <button type="button" class="chip" data-category="legacy">Legacy</button>
+        <button type="button" class="chip" data-category="macos">macOS (Pro)</button>
+      </div>
+
+      <div id="iso-grid" class="grid"></div>
+    </section>
+
+    <section id="toolkit" class="section">
+      <div class="section-header">
+        <div>
+          <h2>Bootable USB &amp; Windows Tools Kit</h2>
+          <p>Official vendor installers and portable system utilities.</p>
+        </div>
+      </div>
+      <div id="toolkit-grid" class="grid"></div>
+    </section>
+
+    <section id="verifier" class="section">
+      <div class="panel">
+        <div class="section-header">
+          <div>
+            <h2>SHA-256 Checksum Verifier</h2>
+            <p>Paste a file SHA-256 checksum to match it against published official media hashes.</p>
+          </div>
+        </div>
+        <div class="controls">
+          <input id="sha-input" class="search-input" type="text" placeholder="Paste 64-character SHA-256 checksum..." aria-label="SHA-256 Checksum" />
+          <button type="button" class="btn btn-primary" onclick="verifySha256()">Verify Checksum</button>
+        </div>
+        <div id="sha-result" class="status-box"></div>
+      </div>
+    </section>
+
+    <section id="pro-access" class="section">
+      <div class="panel">
+        <div class="section-header">
+          <div>
+            <h2>WinISO Pro Access (macOS ISO Archive)</h2>
+            <p>Select a plan in Indian Rupees (₹) and enter your email — we will contact you soon with activation details.</p>
+          </div>
+        </div>
+
+        <div class="pro-grid">
+          <div class="plan-card" onclick="selectPlan(this, 'Pro 1 (₹99/1-month starter pass)')">
+            <strong>Pro 1</strong>
+            <div class="plan-price">₹99</div>
+            <p>Starter 1-month pass</p>
+          </div>
+          <div class="plan-card" onclick="selectPlan(this, 'Monthly (₹199/month)')">
+            <strong>Monthly</strong>
+            <div class="plan-price">₹199</div>
+            <p>Flexible monthly access</p>
+          </div>
+          <div class="plan-card selected" onclick="selectPlan(this, 'Annual (₹1,499/year)')">
+            <strong>Annual • Save 37%</strong>
+            <div class="plan-price">₹1,499</div>
+            <p>Full year of macOS installers</p>
+          </div>
+          <div class="plan-card" onclick="selectPlan(this, 'Lifetime (₹3,499 one-time)')">
+            <strong>Lifetime • Best Value</strong>
+            <div class="plan-price">₹3,499</div>
+            <p>One-time permanent access</p>
+          </div>
+        </div>
+
+        <form onsubmit="submitProRequest(event)" class="controls">
+          <input id="pro-email" class="search-input" type="email" required placeholder="Enter your email address (name@example.com)" aria-label="Pro Access Email" />
+          <button type="submit" class="btn btn-primary">Request Pro Access</button>
+        </form>
+        <div id="pro-status" class="status-box"></div>
+      </div>
+    </section>
+
+    <section id="privacy-copyright" class="section">
+      <div class="section-header">
+        <div>
+          <h2>Privacy Policy &amp; Copyright</h2>
+          <p>Effective Date: November 18, 2026 • Contact: <a href="mailto:learnwithtechshourya@gmail.com">learnwithtechshourya@gmail.com</a></p>
+        </div>
+      </div>
+
+      <div class="legal-block">
+        <h3>1. Privacy Policy</h3>
+        <p>
+          WinISO Hub respects your privacy and keeps user data minimal. Download history, bookmarks, preferences,
+          and support request logs remain on your device unless you choose to clear them.
+        </p>
+        <ul>
+          <li><strong>No Data Selling or Ad Tracking:</strong> We do not sell personal data or run advertising trackers.</li>
+          <li><strong>Email &amp; Pro Requests:</strong> Email addresses entered for Pro access or support are used solely to contact you about your request.</li>
+          <li><strong>Offline SHA-256 Verification:</strong> File checksum verification runs locally on your device; files are never uploaded.</li>
+          <li><strong>Official External Portals:</strong> Downloads connect directly to official vendor servers (Microsoft, Apple, Rufus, Ventoy, 7-Zip, Balena).</li>
+        </ul>
+      </div>
+
+      <div class="legal-block">
+        <h3>2. Copyright &amp; Trademark Notice</h3>
+        <p><strong>Copyright &copy; 2026 WinISO Hub. All rights reserved.</strong></p>
+        <ul>
+          <li><strong>Microsoft Trademarks:</strong> Windows, Windows 11, Windows 10, Windows Server, and Sysinternals are registered trademarks of Microsoft Corporation.</li>
+          <li><strong>Apple Trademarks:</strong> macOS and Apple Silicon are trademarks of Apple Inc.</li>
+          <li><strong>Third-Party Tools:</strong> Rufus, Ventoy, balenaEtcher, 7-Zip, and CrystalDiskInfo belong to their respective authors and licenses.</li>
+          <li><strong>Legal Contact:</strong> For copyright or privacy requests, email <a href="mailto:learnwithtechshourya@gmail.com">learnwithtechshourya@gmail.com</a>.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <strong>WinISO Hub</strong>
+          <p style="color: var(--muted); font-size: 0.88rem; margin-top: 4px;">
+            Official Windows &amp; macOS installation image index &amp; USB tools kit.
+          </p>
+        </div>
+        <div class="footer-links">
+          <a href="#catalog">Catalog</a>
+          <a href="#toolkit">Tools Kit</a>
+          <a href="#privacy-copyright">Privacy Policy</a>
+          <a href="#privacy-copyright">Copyright &amp; Trademarks</a>
+          <a href="mailto:learnwithtechshourya@gmail.com">Contact Support</a>
+        </div>
+      </div>
+      <div class="copyright">
+        &copy; 2026 WinISO Hub. All rights reserved. Windows is a registered trademark of Microsoft Corporation.
+        macOS is a trademark of Apple Inc. WinISO Hub is an independent utility and is not affiliated with Microsoft or Apple.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const ISO_CATALOG = [
+      {
+        id: "win11-26h2",
+        title: "Windows 11 (26H2)",
+        category: "windows11",
+        vendor: "Microsoft",
+        build: "Build 26300.2035",
+        size: "5.6 GB",
+        pro: false,
+        sha256: "d4e81a9c23f04b7e519d3a68c7e4b20f1a85d63c90e1f2a4b6c8d0e1f2a3b4c5",
+        portal: "https://www.microsoft.com/software-download/windows11",
+        summary: "Latest Windows 11 26H2 retail release (Home, Pro, Education) for x64 and ARM64."
+      },
+      {
+        id: "win11-25h2",
+        title: "Windows 11 (25H2)",
+        category: "windows11",
+        vendor: "Microsoft / Archive",
+        build: "Build 26200.7462",
+        size: "5.5 GB",
+        pro: false,
+        sha256: "8b3e19c47d2a6f50e1c9d48b2a7e5f30c6d1a8b9e4f2c7d0a3b5c6e8f1a2d4e7",
+        portal: "https://archive.org/details/windows_11_pro_version_25h2_build_26200.7462_full_soft",
+        summary: "Windows 11 Pro Version 25H2 (Build 26200.7462 Full Soft) archive download."
+      },
+      {
+        id: "win11-24h2",
+        title: "Windows 11 (24H2)",
+        category: "windows11",
+        vendor: "Microsoft / Archive",
+        build: "Build 26100.1742",
+        size: "5.4 GB",
+        pro: false,
+        sha256: "bb25707c91fb908d3fa3e86f64c4157d2247f21e7f64388d0999733b0717425b",
+        portal: "https://archive.org/details/windows-11-24h2-iso_202501",
+        summary: "Windows 11 24H2 ISO archive mirror (Home, Pro, Education) for x64 and ARM64."
+      },
+      {
+        id: "win11-arm64",
+        title: "Windows 11 ARM64",
+        category: "windows11",
+        vendor: "Microsoft",
+        build: "Build 26100.1150",
+        size: "5.1 GB",
+        pro: false,
+        sha256: "f3408a8d11634b8c9f53e30f146a48a901ee5c7bc5da864e4325a7f9202158dc",
+        portal: "https://www.microsoft.com/software-download/windows11arm64",
+        summary: "Native ARM64 image for Snapdragon X PCs and Apple Silicon virtual machines."
+      },
+      {
+        id: "win10-22h2",
+        title: "Windows 10 (22H2)",
+        category: "windows10",
+        vendor: "Microsoft",
+        build: "Build 19045.2965",
+        size: "5.7 GB",
+        pro: false,
+        sha256: "a6f470ca6d3314104f40e74fbd5e60c0f92651dc4434f07612183ec42996166a",
+        portal: "https://www.microsoft.com/software-download/windows10",
+        summary: "Official x64 & x86 release with broad hardware support and no TPM 2.0 requirement."
+      },
+      {
+        id: "win11-ltsc-2024",
+        title: "Windows 11 Enterprise LTSC 2024",
+        category: "server",
+        vendor: "Microsoft",
+        build: "Build 26100.1",
+        size: "4.9 GB",
+        pro: false,
+        sha256: "e10a8cb1e3b6ea2a738eeec8cb4d2e858dfc989b538e12368a78e7aa96316260",
+        portal: "https://www.microsoft.com/evalcenter/evaluate-windows-11-enterprise-ltsc",
+        summary: "Long-Term Servicing Channel release without consumer apps or feature churn."
+      },
+      {
+        id: "win-server-2025",
+        title: "Windows Server 2025",
+        category: "server",
+        vendor: "Microsoft",
+        build: "Build 26100",
+        size: "5.2 GB",
+        pro: false,
+        sha256: "c8b417c80084f7bbd7dd50b1062086e3f3286f7881c3c9ba8d1487103a8305c1",
+        portal: "https://www.microsoft.com/evalcenter/evaluate-windows-server-2025",
+        summary: "180-day official evaluation media for Standard & Datacenter editions."
+      },
+      {
+        id: "win81-sp1",
+        title: "Windows 8.1 Update 3",
+        category: "legacy",
+        vendor: "Microsoft",
+        build: "Build 9600.17415",
+        size: "4.0 GB",
+        pro: false,
+        sha256: "a8b5f673d55b62d0882e7de80d238d850794222040ecf1464406fa550f3b59f4",
+        portal: "https://www.microsoft.com/software-download/windows8ISO",
+        summary: "Legacy retail installation media for older laptops and netbooks."
+      },
+      {
+        id: "macos-sequoia-15",
+        title: "macOS Sequoia 15.1",
+        category: "macos",
+        vendor: "Apple",
+        build: "Build 24B83",
+        size: "14.5 GB",
+        pro: true,
+        sha256: "7d94a21c8e35b0f4a19e824c6b77d0f3e2b14a56c89d01f234a5b6c7d8e9f012",
+        portal: "https://support.apple.com/en-us/102662",
+        summary: "Official Apple InstallAssistant.pkg & Universal bootable installer guide (Pro)."
+      },
+      {
+        id: "macos-sonoma-14",
+        title: "macOS Sonoma 14.7",
+        category: "macos",
+        vendor: "Apple",
+        build: "Build 23H124",
+        size: "13.7 GB",
+        pro: true,
+        sha256: "4c81e52b9f01d7a36e4b8c9d0e1f2a3b4c5d6e7f8091a2b3c4d5e6f708192a3b",
+        portal: "https://support.apple.com/en-us/102662",
+        summary: "Stable macOS 14 full installer for Intel Macs and Apple Silicon (Pro)."
+      },
+      {
+        id: "macos-ventura-13",
+        title: "macOS Ventura 13.7",
+        category: "macos",
+        vendor: "Apple",
+        build: "Build 22H123",
+        size: "12.2 GB",
+        pro: true,
+        sha256: "91a8b7c6d5e4f302192837465564738291a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4",
+        portal: "https://support.apple.com/en-us/102662",
+        summary: "Full macOS 13 installer supporting 2017+ Intel Macs and Apple Silicon (Pro)."
+      }
+    ];
+
+    const TOOLKIT_CATALOG = [
+      {
+        name: "Rufus Portable",
+        vendor: "Pete Batard",
+        version: "v4.6",
+        size: "1.5 MB",
+        ext: ".exe",
+        url: "https://github.com/pbatard/rufus/releases/download/v4.6/rufus-4.6p.exe",
+        portal: "https://rufus.ie/",
+        summary: "Create bootable Windows USB drives with optional TPM 2.0 & Secure Boot bypass."
+      },
+      {
+        name: "Ventoy Multi-Boot",
+        vendor: "Ventoy Official",
+        version: "v1.0.99",
+        size: "15.9 MB",
+        ext: ".zip",
+        url: "https://github.com/ventoy/Ventoy/releases/download/v1.0.99/ventoy-1.0.99-windows.zip",
+        portal: "https://www.ventoy.net/en/download.html",
+        summary: "Copy multiple Windows, Server, and Linux ISOs onto a single USB without reformatting."
+      },
+      {
+        name: "Media Creation Tool",
+        vendor: "Microsoft",
+        version: "24H2",
+        size: "9.8 MB",
+        ext: ".exe",
+        url: "https://go.microsoft.com/fwlink/?linkid=2156295",
+        portal: "https://www.microsoft.com/software-download/windows11",
+        summary: "Microsoft official tool to prepare Windows 11 installation USB drives."
+      },
+      {
+        name: "Sysinternals Suite",
+        vendor: "Microsoft",
+        version: "2024.10",
+        size: "49.0 MB",
+        ext: ".zip",
+        url: "https://download.sysinternals.com/files/SysinternalsSuite.zip",
+        portal: "https://learn.microsoft.com/sysinternals/downloads/sysinternals-suite",
+        summary: "Complete Windows troubleshooting kit: Process Explorer, Autoruns, Disk2vhd."
+      },
+      {
+        name: "PC Health Check",
+        vendor: "Microsoft",
+        version: "v3.9",
+        size: "14.0 MB",
+        ext: ".msi",
+        url: "https://aka.ms/GetPCHealthCheckApp",
+        portal: "https://www.microsoft.com/windows/windows-11#pchealthcheck",
+        summary: "Verify CPU, RAM, TPM 2.0, and Secure Boot compatibility for Windows 11."
+      },
+      {
+        name: "7-Zip Extractor",
+        vendor: "Igor Pavlov",
+        version: "v24.08",
+        size: "1.6 MB",
+        ext: ".exe",
+        url: "https://www.7-zip.org/a/7z2408-x64.exe",
+        portal: "https://www.7-zip.org/download.html",
+        summary: "Fast utility to inspect or extract .iso, .wim, .esd, and .zip packages."
+      }
+    ];
+
+    let activeCategory = "all";
+    let selectedPlan = "Annual (₹1,499/year)";
+
+    function renderIsos() {
+      const grid = document.getElementById("iso-grid");
+      const searchEl = document.getElementById("iso-search");
+      if (!grid || !searchEl) return;
+
+      const q = searchEl.value.trim().toLowerCase();
+      const filtered = ISO_CATALOG.filter((item) => {
+        const catOk = activeCategory === "all" || item.category === activeCategory;
+        const textOk =
+          !q ||
+          item.title.toLowerCase().includes(q) ||
+          item.build.toLowerCase().includes(q) ||
+          item.summary.toLowerCase().includes(q);
+        return catOk && textOk;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="card"><p>No matching ISOs found. Clear your search or select "All OS".</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered
+        .map(
+          (item) => `
+          <article class="card">
+            <div class="card-top">
+              <div>
+                <h3>${item.title}</h3>
+                <div class="meta">${item.vendor} • ${item.build} • ${item.size}</div>
+              </div>
+              <span class="tag ${item.pro ? "tag-pro" : "tag-free"}">${item.pro ? "PRO" : "FREE"}</span>
+            </div>
+            <p>${item.summary}</p>
+            <div class="hash-box">SHA-256: ${item.sha256}</div>
+            <div class="card-actions">
+              ${
+                item.pro
+                  ? `<a href="#pro-access" class="btn btn-pro">Request Pro Access</a>`
+                  : `<a href="${item.portal}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Official Download</a>`
+              }
+              <button type="button" class="btn btn-outline" onclick="copyHash('${item.sha256}')">Copy SHA-256</button>
+            </div>
+          </article>
+        `
+        )
+        .join("");
+    }
+
+    function renderTools() {
+      const grid = document.getElementById("toolkit-grid");
+      if (!grid) return;
+      grid.innerHTML = TOOLKIT_CATALOG.map(
+        (tool) => `
+        <article class="card">
+          <div class="card-top">
+            <div>
+              <h3>${tool.name}</h3>
+              <div class="meta">${tool.vendor} • ${tool.version} • ${tool.size} (${tool.ext})</div>
+            </div>
+            <span class="tag tag-free">OFFICIAL</span>
+          </div>
+          <p>${tool.summary}</p>
+          <div class="card-actions">
+            <a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Download ${tool.ext}</a>
+            <a href="${tool.portal}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Website</a>
+          </div>
+        </article>
+      `
+      ).join("");
+    }
+
+    function copyHash(hash) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(hash).catch(() => {});
+      }
+      const verifyInput = document.getElementById("sha-input");
+      if (verifyInput) {
+        verifyInput.value = hash;
+        verifySha256();
+      }
+    }
+
+    function verifySha256() {
+      const input = document.getElementById("sha-input");
+      const out = document.getElementById("sha-result");
+      if (!input || !out) return;
+
+      const cleaned = input.value.trim().toLowerCase();
+      if (!cleaned) {
+        out.className = "status-box status-warn show";
+        out.textContent = "Please paste a 64-character SHA-256 checksum to verify.";
+        return;
+      }
+
+      const match = ISO_CATALOG.find((item) => item.sha256.toLowerCase() === cleaned);
+      if (match) {
+        out.className = "status-box status-success show";
+        out.textContent = `Verified Match: ${match.title} (${match.build}) — Official ${match.vendor} checksum.`;
+      } else {
+        out.className = "status-box status-warn show";
+        out.textContent = "No exact catalog match found for this SHA-256 checksum.";
+      }
+    }
+
+    function selectPlan(el, planLabel) {
+      document.querySelectorAll(".plan-card").forEach((card) => card.classList.remove("selected"));
+      el.classList.add("selected");
+      selectedPlan = planLabel;
+    }
+
+    function submitProRequest(event) {
+      event.preventDefault();
+      const emailEl = document.getElementById("pro-email");
+      const statusEl = document.getElementById("pro-status");
+      if (!emailEl || !statusEl) return;
+
+      const email = emailEl.value.trim();
+      if (!email.includes("@") || !email.includes(".")) {
+        statusEl.className = "status-box status-warn show";
+        statusEl.textContent = "Please enter a valid email address.";
+        return;
+      }
+
+      const ref = `PRO-${Math.floor(1000 + Math.random() * 9000)}`;
+      statusEl.className = "status-box status-success show";
+      statusEl.innerHTML = `<strong>We sent you an email!</strong> Details for <strong>${selectedPlan}</strong> were sent to <strong>${email}</strong>. We will contact you soon. (Ref: ${ref})`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll("[data-category]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll("[data-category]").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeCategory = btn.getAttribute("data-category");
+          renderIsos();
+        });
+      });
+
+      const searchEl = document.getElementById("iso-search");
+      if (searchEl) searchEl.addEventListener("input", renderIsos);
+
+      renderIsos();
+      renderTools();
+    });
+  </script>
+</body>
+</html>

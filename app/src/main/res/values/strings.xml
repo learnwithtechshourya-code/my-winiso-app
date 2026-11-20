@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">WinISO Hub</string>
+    <string name="official_sources_badge">Official Microsoft Sources Only</string>
+    <string name="search_placeholder">Search Windows ISOs (e.g. 11 26H2, 25H2, 10, Server)...</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_verifier">Hash Verify</string>
+    <string name="nav_guide">USB Guide</string>
+    <string name="nav_downloads">Downloads</string>
+    <string name="nav_profile">Account</string>
+    <string name="btn_download">Download ISO</string>
+    <string name="btn_copy_link">Copy Link</string>
+    <string name="btn_open_portal">Open Official Site</string>
+    <string name="btn_verify_hash">Verify SHA-256</string>
+    <string name="btn_sign_in">Sign In</string>
+    <string name="btn_sign_out">Sign Out</string>
+</resources>
